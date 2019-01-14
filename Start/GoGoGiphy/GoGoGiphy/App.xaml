@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"             
+             x:Class="GoGoGiphy.App"
+             >
+	<Application.Resources>
+        
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="HeightRequest" Value="50" />
+            <Setter Property="WidthRequest" Value="100" />
+            <Setter Property="BorderWidth" Value="2" />
+        </Style>
+        
+        <Style x:Key="FFImageLoadingCachedImageBaseStyle" TargetType="{x:Type ffimageloading:CachedImage}">
+            <Setter Property="HeightRequest" Value="175" />
+            <Setter Property="WidthRequest" Value="175" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Aspect" Value="AspectFill" />
+            <Setter Property="DownsampleToViewSize" Value="True" />
+        </Style>
+        
+	</Application.Resources>
+</Application>

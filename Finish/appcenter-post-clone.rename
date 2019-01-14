@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+echo "**************************************************************************************************"
+echo "Post Clone Script"
+echo "**************************************************************************************************"
+
+echo "Post Clone Script"
+echo "Updating AppCenterSecretiOS in Settings"
+
+echo "AppCenterToken value: $AppCenterToken"
+echo "iOSSecret value: $iOSSecret"
+
+#echo "BUILD_REPOSITORY_LOCALPATH Contents"
+#ls -R $BUILD_REPOSITORY_LOCALPATH
+
+# Updating AppCenterSecretiOS
+
+SettingsFile=$BUILD_REPOSITORY_LOCALPATH/GoGoGiphy/GoGoGiphy/Settings.cs
+
+sed -e '' "s,iOSSecret,$iOSSecret,g" $SettingsFile
+sed -e '' "s,GiphyApiKey,$GiphyApiKey,g" $SettingsFile
+
+# Print out file for reference
+cat $SettingsFile
+
+echo "Updated AppCenterSecretiOS!"

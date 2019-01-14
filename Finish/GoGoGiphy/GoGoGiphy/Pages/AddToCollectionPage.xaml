@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:GoGoGiphy.Core.Behaviors"
+             x:Class="GoGoGiphy.Core.Pages.AddToCollectionPage"
+             >
+    <ContentPage.Resources>
+
+        <Style x:Key="EnterCollectionNameEntryStyle" TargetType="{x:Type Entry}">
+            <Setter Property="HeightRequest" Value="40" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style x:Key="CreateCollectionButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="WidthRequest" Value="50" />
+        </Style>
+        
+    </ContentPage.Resources>
+    <ContentPage.Title>
+        Add To Collection
+    </ContentPage.Title>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Close" Command="{Binding Path=CloseModalCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.2*" />
+                </Grid.ColumnDefinitions>
+                <Entry x:Name="EnterCollectionNameEntry"
+                       Grid.Column="0"
+                       Placeholder="Create New Collection"
+                       Text="{Binding Path=NewCollectionName}"
+                       Style="{StaticResource Key=EnterCollectionNameEntryStyle}"
+                       />
+                <Button x:Name="CreateCollectionButton" 
+                        Grid.Column="1"
+                        Text="Create"
+                        Command="{Binding Path=CreateCollectionCommand}"
+                        Style="{StaticResource Key=CreateCollectionButtonStyle}"
+                        IsEnabled="{Binding Path=IsCreateCollectionButtonEnabled}"
+                        >
+                    <!--<Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                     Binding="{Binding Source={x:Reference EnterCollectionNameEntry}, Path=Text.Length}"
+                                     Value="0"
+                                     >
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>-->
+                </Button>
+            </Grid>
+            <Label Text="Or add to existing collection below" 
+                   Margin="5"
+                   HorizontalOptions="CenterAndExpand"
+                   />
+            <ListView x:Name="GifCollections"
+                      ItemsSource="{Binding Path=GifCollections}"
+                      >
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="ItemSelected"
+                                                      Command="{Binding Path=ListViewItemSelectedCommand}"
+                                                      />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Path=Name}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

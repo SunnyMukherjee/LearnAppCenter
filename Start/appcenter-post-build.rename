@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+echo "**************************************************************************************************"
+echo "Post Build Script"
+echo "**************************************************************************************************"
+
+echo "APPCENTER_SOURCE_DIRECTORY Contents"
+ls -R $APPCENTER_SOURCE_DIRECTORY
+
+echo "APPCENTER_OUTPUT_DIRECTORY Contents"
+ls -R $APPCENTER_OUTPUT_DIRECTORY
+
+echo "xamarin.uitest Contents"
+ls -R /Users/vsts/.nuget/packages/xamarin.uitest
+
+echo "Relative path to Xamarin.UITest"
+ls -R $APPCENTER_SOURCE_DIRECTORY/../../../../../.nuget/packages/Xamarin.UITest
+
+echo "Running UITest Command for iOS"
+appcenter test run uitest --app "GoGoGiphyGroup/GoGoGiphy-iOS" --async --devices "GoGoGiphyGroup/iphonex" --app-path $APPCENTER_OUTPUT_DIRECTORY/GoGoGiphy.iOS.ipa --test-series "master" --locale "en_US" --build-dir $APPCENTER_SOURCE_DIRECTORY/GoGoGiphy/GoGoGiphy.UITest/bin/Debug --uitest-tools-dir /Users/vsts/.nuget/packages/xamarin.uitest/2.2.6/lib/tools --token $AppCenterToken

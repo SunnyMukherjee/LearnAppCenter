@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:converters="clr-namespace:GoGoGiphy.Core.Converters"
+             xmlns:controls="clr-namespace:GoGoGiphy.Core.Controls"     
+             xmlns:behaviors="clr-namespace:GoGoGiphy.Core.Behaviors"
+             xmlns:renderers="clr-namespace:GoGoGiphy.Core.CustomRenderers;assembly=GoGoGiphy.Core"
+             xmlns:pulltorefresh="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
+             x:Class="GoGoGiphy.Core.Pages.HomePage" 
+             x:Name="HomePage1"             
+             AutomationId="HomePage1"
+             >
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:UrlToPathConverter x:Key="UrlToPathConverter" />
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+    <ContentPage.Title>
+        GoGoGiphy
+    </ContentPage.Title>
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+
+            <Button x:Name="TestButton"
+                    Text="Test"
+                    IsVisible="False"
+                    Command="{Binding Path=TestCommand}"
+                    />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <renderers:CustomSearchBar x:Name="SearchBar" 
+                                           AutomationId="SearchBar"
+                                           Grid.Column="0"
+                                           Placeholder="Search for gifs"
+                                           Text="{Binding Path=SearchText}"
+                                           SearchCommand="{Binding Path=SearchCommand}" 
+                                           SearchCommandParameter="{Binding Path=Text, Source={x:Reference SearchBar}, Mode=TwoWay}"       
+                                           HeightRequest="40"
+                                           Focused="SearchBar_Focused"                                           
+                                           >
+                    <!--<SearchBar.Behaviors>
+                    <behaviors:TextChangedBehavior />
+                </SearchBar.Behaviors>-->
+                </renderers:CustomSearchBar>
+                <Button x:Name="CancelSearchButton"
+                        AutomationId="CancelSearchButton"
+                        Grid.Column="1"
+                        Text="Cancel"
+                        IsVisible="{Binding Path=IsCancelButtonVisible}"
+                        Command="{Binding Path=CancelSearchCommand}"
+                        WidthRequest="{Binding Path=CancelSearchButtonWidth}"
+                        FontSize="Micro"
+                        >
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="BorderWidth" Value="1" />
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <pulltorefresh:PullToRefreshLayout x:Name="PullToRefreshLayoutControl" 
+                                               IsPullToRefreshEnabled="True"
+                                               IsRefreshing="{Binding Path=IsRefreshing, Mode=TwoWay}"
+                                               RefreshCommand="{Binding Path=RefreshCommand}"
+                                               IsVisible="{Binding Path=IsTrendingImagesPanelVisible}"  
+                                               VerticalOptions="StartAndExpand"                                               
+                                               >
+                <ScrollView AutomationId="TrendingImagesScrollView" 
+                            Orientation="Vertical" 
+                            Scrolled="ScrollView_Scrolled"
+                            >
+                    <controls:ExtendedFlexLayout x:Name="TrendingImagesPanel"
+                                                 AutomationId="TrendingImagesPanel"
+                                            Direction="Row"
+                                            Wrap="Wrap"
+                                            JustifyContent="SpaceEvenly"
+                                            ItemsSource="{Binding Path=TrendingImages, Mode=TwoWay}"
+                                             >
+                        <controls:ExtendedFlexLayout.ItemTemplate>
+                            <DataTemplate>
+                                <controls:ExtendedCachedImage AutomationId="CachedImage" 
+                                                            Source="{Binding Path=ImagePreviewGifUrl, 
+                                                                Converter={StaticResource Key=UrlToPathConverter}}"
+                                                            Style="{StaticResource FFImageLoadingCachedImageBaseStyle}"
+                                                            >
+                                    <controls:ExtendedCachedImage.Transformations>
+                                        <fftransformations:RoundedTransformation Radius="40" />
+                                    </controls:ExtendedCachedImage.Transformations>
+                                    <controls:ExtendedCachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.TappedCommand, 
+                                                                    Source={x:Reference HomePage1}}"
+                                                              CommandParameter="{Binding Path=.}"
+                                                              NumberOfTapsRequired="1"
+                                                              />
+                                    </controls:ExtendedCachedImage.GestureRecognizers>
+                                    <controls:ExtendedCachedImage.LoadingPlaceholder>
+                                        <OnPlatform x:TypeArguments="ImageSource">
+                                            <On Platform="iOS, Android" Value="loading.gif" />
+                                        </OnPlatform>
+                                    </controls:ExtendedCachedImage.LoadingPlaceholder>
+                                    <controls:ExtendedCachedImage.ErrorPlaceholder>
+                                        <OnPlatform x:TypeArguments="ImageSource">
+                                            <On Platform="iOS, Android" Value="error.gif" />
+                                        </OnPlatform>
+                                    </controls:ExtendedCachedImage.ErrorPlaceholder>
+                                </controls:ExtendedCachedImage>
+                            </DataTemplate>
+                        </controls:ExtendedFlexLayout.ItemTemplate>
+                    </controls:ExtendedFlexLayout>
+                </ScrollView>
+            </pulltorefresh:PullToRefreshLayout>
+
+            <Grid IsVisible="{Binding Path=IsTrendingImagesPanelVisible, Converter={StaticResource Key=InverseBooleanConverter}}"
+                  VerticalOptions="FillAndExpand"
+                  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="ClearSearchCacheButton"
+                        AutomationId="ClearSearchCacheButton"
+                        Grid.Row="0"
+                        Text="Clear Search"
+                        Command="{Binding Path=ClearSearchCacheCommand}"
+                        HorizontalOptions="Center"
+                        FontSize="Small"
+                        >
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="HeightRequest" Value="40" />
+                            <Setter Property="WidthRequest" Value="100" />
+                            <Setter Property="BorderWidth" Value="1" />
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <ListView x:Name="SearchCacheListView"
+                          AutomationId="SearchCacheListView"
+                          Grid.Row="1"
+                          ItemsSource="{Binding Path=SearchCache}"
+                          VerticalOptions="FillAndExpand"                          
+                          >
+                    <ListView.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="ItemSelected" 
+                                                          Command="{Binding Path=SearchCommand}" 
+                                                          />
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding Path=SearchString}"
+                                      />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

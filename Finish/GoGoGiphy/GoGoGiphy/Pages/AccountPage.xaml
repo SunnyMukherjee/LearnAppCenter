@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoGoGiphy.Core.Pages.AccountPage"
+             AutomationId="AccountPage"
+             >
+    <ContentPage.Resources>
+
+        <Style x:Key="TableViewLabelStyle"
+                   TargetType="{x:Type Label}"
+                   >
+            <Setter Property="Margin" Value="20,0,20,0" />
+            <Setter Property="HorizontalOptions" Value="Start" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="TableViewImageStyle"
+                   TargetType="{x:Type Image}"
+                   >
+            <Setter Property="HeightRequest" Value="20" />
+            <Setter Property="HorizontalOptions" Value="EndAndExpand" />
+        </Style>
+
+        <Style x:Key="RatingPickerStyle" TargetType="{x:Type Picker}">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalOptions" Value="EndAndExpand" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="WidthRequest" Value="100" />
+        </Style>
+
+    </ContentPage.Resources>
+    <ContentPage.Title>
+        Account
+    </ContentPage.Title>
+    <ContentPage.Content>
+        <TableView Intent="Settings">
+            <TableRoot>
+                <TableSection>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=ViewCollectionsCommand}" NumberOfTapsRequired="1" />
+                            </StackLayout.GestureRecognizers>
+                            <Label Text="Collections" Style="{StaticResource TableViewLabelStyle}" />
+                            <Image Source="Forward50.png" Style="{StaticResource TableViewImageStyle}" />
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>               
+                <TableSection Title="Settings"> 
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select Rating" Style="{StaticResource Key=TableViewLabelStyle}" />
+                            <Picker x:Name="RatingPicker" 
+                                    Title="Rating"
+                                    ItemsSource="{Binding Path=Ratings}"
+                                    SelectedItem="{Binding Path=SelectedRating, Mode=TwoWay}"
+                                    Style="{StaticResource RatingPickerStyle}"
+                                    />
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:GoGoGiphy.Core.Converters"
+             xmlns:behaviors="clr-namespace:GoGoGiphy.Core.Behaviors"
+             x:Class="GoGoGiphy.Core.Pages.CollectionsPage"
+             >
+    <ContentPage.Behaviors>
+        <!--<behaviors:EventToCommandBehavior EventName="Appearing" Command="{Binding Path=AppearingCommand}" />-->
+    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+
+            <Style x:Key="ArrowImageStyle"
+                   TargetType="{x:Type Image}"
+                   >
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="HorizontalOptions" Value="EndAndExpand" />
+            </Style>
+
+            <Style x:Key="ListViewLabelStyle"
+                   TargetType="{x:Type Label}"
+                   >
+                <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="Large" />
+                <Setter Property="Margin" Value="5" />
+            </Style>
+
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+    <ContentPage.Title>
+        Collections
+    </ContentPage.Title>
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" 
+                     VerticalOptions="FillAndExpand"
+                     >
+            <ListView x:Name="GifCollectionsList"
+                          ItemsSource="{Binding Path=GifCollections, Mode=TwoWay}"
+                          IsVisible="{Binding Path=IsCollectionsVisible}"
+                          VerticalOptions="FillAndExpand"
+                          >
+                <ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="ItemSelected" 
+                                                      Command="{Binding Path=ListViewItemSelectedCommand}" 
+                                                      />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Path=Name}" 
+                                           Style="{StaticResource Key=ListViewLabelStyle}"
+                                           />
+                                <Image Source="Forward50.png"
+                                           Style="{StaticResource Key=ArrowImageStyle}"
+                                           />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Label Text="No Collections Yet"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       IsVisible="{Binding Path=IsCollectionsVisible, Converter={StaticResource Key=InverseBooleanConverter}}"
+                   />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:GoGoGiphy.Core.Converters"
+             xmlns:controls="clr-namespace:GoGoGiphy.Core.Controls"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             x:Class="GoGoGiphy.Core.Pages.ViewEditCollectionPage"
+             Title="{Binding Path=Title}"
+             x:Name="ViewEditCollectionPage1"
+             >
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:UrlToPathConverter x:Key="UrlToPathConverter" />
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+
+            <StackLayout Orientation="Vertical" 
+                         VerticalOptions="FillAndExpand"
+                         IsVisible="{Binding Path=IsGifLayoutVisible}"
+                         >
+                               
+                <ScrollView Orientation="Vertical" 
+                            VerticalOptions="StartAndExpand"
+                            >
+                    <controls:ExtendedFlexLayout x:Name="GifsLayout"
+                                            Direction="Row"
+                                            Wrap="Wrap"
+                                            JustifyContent="SpaceEvenly"
+                                            ItemsSource="{Binding Path=Gifs, Mode=TwoWay}"
+                                             >
+                        <controls:ExtendedFlexLayout.ItemTemplate>
+                            <DataTemplate>
+                                <AbsoluteLayout>
+                                    <ffimageloading:CachedImage Source="{Binding Path=ImagePreviewGifUrl, 
+                                                                    Converter={StaticResource Key=UrlToPathConverter}}"
+                                                                Style="{StaticResource FFImageLoadingCachedImageBaseStyle}"
+                                                                >
+                                        <ffimageloading:CachedImage.Transformations>
+                                            <fftransformations:RoundedTransformation Radius="40" />
+                                        </ffimageloading:CachedImage.Transformations>
+                                        <ffimageloading:CachedImage.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.TappedCommand, 
+                                                                    Source={x:Reference ViewEditCollectionPage1}}"
+                                                              CommandParameter="{Binding Path=.}"
+                                                              NumberOfTapsRequired="1"
+                                                              />
+                                        </ffimageloading:CachedImage.GestureRecognizers>
+                                        <ffimageloading:CachedImage.LoadingPlaceholder>
+                                            <OnPlatform x:TypeArguments="ImageSource">
+                                                <On Platform="iOS, Android" Value="loading.gif" />
+                                            </OnPlatform>
+                                        </ffimageloading:CachedImage.LoadingPlaceholder>
+                                        <ffimageloading:CachedImage.ErrorPlaceholder>
+                                            <OnPlatform x:TypeArguments="ImageSource">
+                                                <On Platform="iOS, Android" Value="error.gif" />
+                                            </OnPlatform>
+                                        </ffimageloading:CachedImage.ErrorPlaceholder>
+                                    </ffimageloading:CachedImage>
+                                    <Button AbsoluteLayout.LayoutBounds="1,1,1,1"
+                                            AbsoluteLayout.LayoutFlags="All"
+                                            HorizontalOptions="EndAndExpand"
+                                            VerticalOptions="StartAndExpand"
+                                            Margin="5"
+                                            BorderRadius="15"
+                                            Text="X"
+                                            Command="{Binding Path=BindingContext.DeleteGifCommand, 
+                                                        Source={x:Reference ViewEditCollectionPage1}}"
+                                            CommandParameter="{Binding Path=.}"
+                                            >
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="BackgroundColor" Value="Black" />
+                                                <Setter Property="TextColor" Value="White" />
+                                                <Setter Property="HeightRequest" Value="40" />
+                                                <Setter Property="WidthRequest" Value="40" />
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </AbsoluteLayout>                                
+                            </DataTemplate>
+                        </controls:ExtendedFlexLayout.ItemTemplate>
+                    </controls:ExtendedFlexLayout>
+                </ScrollView>
+            </StackLayout>
+
+            <StackLayout Orientation="Vertical"
+                         VerticalOptions="FillAndExpand"
+                         IsVisible="{Binding Path=IsGifLayoutVisible, Converter={StaticResource Key=InverseBooleanConverter}}"
+                         >
+                <Label Text="No Gifs in this collection yet.  Add them from the Home Page."
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       />
+            </StackLayout>
+            
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

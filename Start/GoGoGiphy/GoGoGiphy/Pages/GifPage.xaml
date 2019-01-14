@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:converters="clr-namespace:GoGoGiphy.Core.Converters"
+             x:Class="GoGoGiphy.Core.Pages.GifPage"
+             >
+    <ContentPage.Resources>
+
+        <Style x:Key="AddToCollectionButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="HeightRequest" Value="100" />
+            <Setter Property="WidthRequest" Value="150" />
+            <Setter Property="BorderWidth" Value="1" />
+        </Style>
+        
+        <Style x:Key="SaveToCameraRollButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="WidthRequest" Value="150" />
+            <Setter Property="BorderWidth" Value="1" />
+        </Style>
+        
+        <ResourceDictionary>
+            <converters:UrlToPathConverter x:Key="UrlToPathConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Close" Command="{Binding Path=CloseModalCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="CenterAndExpand" 
+                     VerticalOptions="CenterAndExpand"
+                     >
+            <StackLayout.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Down" Command="{Binding Path=CloseModalCommand}" />
+            </StackLayout.GestureRecognizers>
+            <ffimageloading:CachedImage HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        DownsampleToViewSize="True"
+                                        HeightRequest="300"
+                                        WidthRequest="500"
+                                        Margin="10"
+                                        Source="{Binding Path=GifDataItem.ImageDownsizedUrl, 
+                                                    Converter={StaticResource Key=UrlToPathConverter}}"
+                                        >
+                <ffimageloading:CachedImage.LoadingPlaceholder>
+                    <OnPlatform x:TypeArguments="ImageSource">
+                        <On Platform="iOS, Android" Value="loading.gif" />                        
+                    </OnPlatform>
+                </ffimageloading:CachedImage.LoadingPlaceholder>
+                <ffimageloading:CachedImage.ErrorPlaceholder>
+                    <OnPlatform x:TypeArguments="ImageSource">
+                        <On Platform="iOS, Android" Value="error.gif" />
+                    </OnPlatform>
+                </ffimageloading:CachedImage.ErrorPlaceholder>
+            </ffimageloading:CachedImage>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Add To Collection"
+                        Command="{Binding Path=AddToCollectionCommand}"
+                        Style="{StaticResource Key=AddToCollectionButtonStyle}"
+                        />
+                <Button x:Name="SaveToCameraRollButton" 
+                        Text="Save to Camera Roll" 
+                        IsVisible="False"
+                        Style="{StaticResource Key=SaveToCameraRollButtonStyle}" 
+                        />
+            </StackLayout>
+          
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
